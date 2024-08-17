@@ -1,0 +1,141 @@
+<% layout('layout/boilerplate.ejs') %>
+    <link rel="stylesheet" href="/css/star.css">
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <!-- Now we have changed the yelpcamp model to takes multiple images from array so it is taking out one of them and displaying it-->
+                <!--! Carousel is working but the bootstrap js is not working due to the version issue or something -->
+                <!--* Here we have added carousel in the show page for ease of user viewing multiple images  -->
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <% camps.images.map((img,i)=>{ %>
+                            <div class="carousel-item <%= i===0?" active":"" %> ">
+                                <img crossorigin="anonymous" src=" <%= img.url %> " class="d-block w-100" alt="">
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% if(camps.images.length>1){ %>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        <% } %>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <%= camps.title %>
+                    </h4>
+                    <p class="card-text">
+                        <%= camps.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= camps.location%>
+                    </li>
+                    <li class="list-group-item text">
+                        Submitted by - <%= camps.author.username%>
+                    </li>
+                    <li class="list-group-item">$<%= camps.price %>/night</li>
+                </ul>
+                <div class="card-body">
+                    <a href="/campground" class="card-link btn btn-info">All campground</a>
+                    <!-- In MongoDB, document IDs are stored as ObjectId types, and comparing two ObjectIds using the == or === operators may not 
+                     work as expected. The .equals method is specifically designed to compare ObjectId instances correctly.  -->
+                    <% if(currentUser && camps.author.equals(currentUser._id)) { %>
+                        <span>
+                            <a href="/campground/<%= camps._id %>/edit" class="card-link btn btn-warning">Edit</a>
+                            <form class="d-inline" action="/campground/<%=camps._id%>?_method=DELETE" method="POST">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        </span>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!--! This is for the styling of the map.Map will be added wherever we put the below code. -->
+        <div id='map' >
+        </div>
+
+        <div class="col-6">
+            <!-- Now to create a review we are craeting a form in this page as it is most relevant for a iser to sumbit a review on a particular campground -->
+            <!-- To do that we have created a simple form we have also added validation to it-->
+            <% if(currentUser){ %>
+                <form action="/campground/<%= camps._id %>/reviews" method="post" class="mb-3 needs-validation"
+                    novalidate>
+                    <div>
+                        <h4>Please Leave A Review :</h4>
+                    </div>
+                    <div class="mt-3">
+                        <!-- * This is also added from starability repo to add stars to the form -->
+                        <fieldset class="starability-basic">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked
+                                aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="rating" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="rating" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="rating" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="rating" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="rating" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                    </div>
+                    <div class="mb-3">
+                        <h5>
+                            <label for="body">Review:</label>
+                        </h5>
+                        <textarea class="form-control" name="body" id="body" required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <button class="btn btn-success" type="submit">Submit</button>
+                </form>
+                <% } %>
+                    <% for(let review of camps.reviews){ %>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Username : <%= review.author.username %>
+                                </h5>
+                                <!--* This is css property to include star in the project the code for it is in the github repo of starability    -->
+                                <p class="starability-result" data-rating="<%=review.rating%>">
+                                    Rated: <%=review.rating%> stars
+                                </p>
+                                <p class="card-text mb-2">
+                                    Review : <%= review.body %>
+                                </p>
+                                <% if(currentUser && review.author.equals(currentUser._id)) { %>
+                                    <form action="/campground/<%= camps._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                        method="post">
+                                        <button class="btn btn-sm btn-danger"> Delete </button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+        </div>
+    </div>
+
+    <!--*This code will create a variable in ejs and then pass to the script to be used as ejs is not able to reslove the variable in the required script  -->
+    <script>
+        const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
+        const campground = <%- JSON.stringify(camps) %>;
+    </script>
+
+    <!-- This code requires the js code in public folder required for mapbox -->
+    <script src="/js/mapBoxJs.js"></script>
+
+
+    <!--?The reason we declare the variable in this way—const campground = <%- JSON.stringify(camps) %>;—is to safely pass server-side data (JavaScript objects) to the client-side JavaScript code within an EJS (Embedded JavaScript) template.  -->

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boilerplate</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style.css">
+  <!--* This code is added for proper working of maps. Due to this map can be accesed on all the templates. -->
+  <script crossorigin="anonymous" src='https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js'></script>
+  <link crossorigin="anonymous" href='https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css' rel='stylesheet' />
+  <link rel="stylesheet" href="/css/mapstyle.css">
+</head>
+
+<body class="d-flex flex-column vh-100">
+  <!-- incldude is feature of ejs used to include other EJS templates into the current template. -->
+  <%- include('../partials/navbar')%>
+    <main class="container mt-5">
+      <!--* This is the include for success flash partial -->
+      <%- include('../partials/flash.ejs')%>
+        <%- body %>
+    </main>
+    <%- include('../partials/footer')%>
+      <script src="https://code.jquery.com/jquery-3.6.3.min.js" crossorigin="anonymous" ></script>
+      <script src="https://
+      cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-wUX9HxJlnQuUSlDbHU5aILnmSX6ONla6CSqvQaqh8MQc38LkYXDwgGO7WXX+U2VK"
+        crossorigin="anonymous"></script>
+      <script src='/js/clientSideValidation.js'>// Example starter JavaScript for disabling form submissions if there are invalid fields </script>
+</body>
+
+</html>

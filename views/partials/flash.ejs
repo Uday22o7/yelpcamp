@@ -1,0 +1,17 @@
+<!--! This is a partial for success flash created to seprate from rest of the code   -->
+
+<!--* This is logic to add success flash only when req.flash for success is made -->
+<% if(success && success.length){ %>
+    <!--* This is a bootstrap dismissiable alert craeted but js for the alert close button not working -->
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% }%>
+
+<% if(error && error.length){ %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% }%>

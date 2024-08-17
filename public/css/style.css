@@ -1,0 +1,23 @@
+/* we used css for adding footer at the bottom of the web page as with bootstrap it was creating a issue*/
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+}
+
+a {
+    font-size: 1.1rem;
+    color: grey;
+    text-decoration: none;
+    transition: 200ms;
+}
+
+div a:hover {
+    color: blue;
+    text-decoration: underline blue;
+}
+

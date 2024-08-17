@@ -1,0 +1,73 @@
+<% layout('layout/boilerplate.ejs') %>
+
+
+    <div class="row">
+        <h1 class="text-center"> Edit campground</h1>
+        <div class="col-6 offset-3">
+            <form action="/campground/<%= camps._id %>?_method=PUT" method="post" class="needs-validation" novalidate
+                enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="name">Name : </label>
+                    <input class="form-control" type="text" name="title" id="name" value="<%= camps.title %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location : </label>
+                    <input class="form-control" type="text" name="location" id="location" value="<%= camps.location %>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <!-- Our Code directly work but in lecture,they had to add some javascript to make it work-->
+                 <!--* this we did so that the add image button can look good-->
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload images:</label>
+                    <input class="form-control" type="file" id="image" name="image" multiple>
+                </div>
+                <!-- Created a input for adding images to already existing array -->
+                <!-- <div class="mb-3">
+                    <label class="form-label" for="image">Add more images:</label>
+                    <input type="file" name="image" id="image" multiple>
+                </div> -->
+                <div class="mb-3">
+                    <label class="form-label" for="price">Price : </label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="price-label">$</span>
+                        <input type="number" class="form-control" name="price" id="price" placeholder="0.0"
+                            aria-label="Price" aria-describedby="price-label" value="<%= camps.price %>" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description : </label>
+                    <textarea class="form-control" type="text" name="description" id="description" required>
+                        <%= camps.description %>
+                    </textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <!--* We are now displaying image and giving user ability to select the image he wants to delet and sending it in a req in deleteImages array  -->
+                    <% camps.images.forEach((img,i)=>{ %>
+                        <div>
+                            <img src=" <%= img.url %> " class="img-thumbnail" width="200px" height="200px">
+                            <span class="form-chcek-inline" >
+                                <input type="checkbox" name="deleteImages[]" id="image-<%=i%>" value="<%= img.filename %>">
+                            </span>
+                            <label for="image-<%=i%>">Delete?</label>
+                        </div>
+                        <% }) %>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-info" type="submit">Save</button>
+                </div>
+            </form>
+            <a href="/campground">Back campground</a>
+        </div>
+    </div>

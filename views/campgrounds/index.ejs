@@ -1,0 +1,70 @@
+    <% layout('layout/boilerplate.ejs') %>
+        <!--! This is for the styling of the map.Map will be added wherever we put the below code. -->
+        <div id="cluster-map">
+        </div>
+
+        <h1>All Campground</h1>
+        <div class="mt-2 mb-2">
+            <a href="/campground/new">Add Campground</a>
+        </div>
+        <% for(let campground of campgrounds){ %>
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- We changed it so that it will now only show one of the multiple images uploaded by user -->
+                        <% if(campground.images.length){ %>
+                            <img crossorigin="anonymous" class="img-fluid" src="<%= campground.images[0].url%>" alt="">
+                            <% } else {%>
+                                <img crossorigin="anonymous" class="img-fluid"
+                                    src="https://res.cloudinary.com/dcjtbfnww/image/upload/v1722611158/Yelpcamp/nululnsauiokhfma1hnx.png"
+                                    alt="">
+                                <% } %>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= campground.title %>
+                            </h5>
+                            <p class="card-text">
+                                <%= campground.description %>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <%= campground.location %>
+                                </small>
+                            </p>
+                            <a class="btn btn-primary" href="/campground/<%= campground._id %>">View <%= campground.title %>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+        <!--*This code will create a variable in ejs and then pass to the script to be used as ejs is not able to reslove the variable in the required script  -->
+        <script>
+            const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
+            // we are returning the data from here in a object under the field of features
+            const campgrounds = {features: <%- JSON.stringify(campgrounds) %>}
+        </script>
+
+        <!-- This code requires the js code in public folder required for mapbox -->
+        <script src="/js/clusterMap.js"></script>
+
+<!-- <%-  %> The tag outputs the value without escaping HTML characters. This means that the output will be rendered as raw HTML. -->
+ <!-- <%=  %>  tag outputs the value and escapes HTML characters. This is used to prevent Cross-Site Scripting (XSS) attacks by converting special HTML characters (like <, >, &, etc.) to their corresponding HTML entities. -->
+
+ <!-- 1. Context Separation:
+ Server-Side (EJS): EJS is rendered on the server, and it outputs HTML that is sent to the client's browser. The data you use in EJS (like campgrounds) is available only during the rendering phase on the server.
+ Client-Side (JavaScript): JavaScript code running in the browser (client-side) doesn't have direct access to server-side variables like campgrounds. It only has access to what is passed to it through the HTML or what it fetches from the server via AJAX or other methods.
+ 
+ 2. JSON Serialization:
+ The campgrounds data is in the form of a JavaScript object or array on the server side. To send this data to the client side (JavaScript), you need to convert it into a JSON string using JSON.stringify(campgrounds).
+ The <%- %> tag is used to output this JSON string directly into the script without escaping, so it can be used as a JavaScript object in the client's browser.
+ 
+ 3. Why Not Directly in JS File?:
+ If you were to write this data directly in a separate JS file, that file wouldn't have access to the server-side campgrounds variable. The JS file is static and loaded by the browser, and it doesn't interact with the server-side variables unless the data is passed to it through the HTML or via API calls.
+ By embedding the data in the EJS template, you're effectively passing the server-rendered data into the client-side JavaScript code within the same HTML page. This allows the JavaScript on the client side to work with the data that was available on the server side during the page render.
+ 
+ 4. Practical Example:
+ Suppose you want to display a map with markers for each campground. The map's JavaScript code needs access to the campgrounds data to plot these markers. Since this data was initially only available on the server, you need to serialize and pass it into a variable that the client-side script can use. This is exactly what the line does. -->
