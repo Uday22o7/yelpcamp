@@ -1,1 +1,1 @@
-This folder can be used as a refrence in creating a app as most of thhe thing in this are created with proper manner refer to it while creating a app
+YelpCamp is a web application that allows users to explore and review various campsites. It provides user ratings, and feedback for camping enthusiasts to find and share their experiences.
